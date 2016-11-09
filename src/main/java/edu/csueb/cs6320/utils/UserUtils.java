@@ -21,9 +21,9 @@ public class UserUtils {
 
     static {
         users = new ArrayList<User>();
-        users.add(new User("Fred", "Thompson", "fred.thompson@email.com", 1, User.Roles.CUSTOMER));
-        users.add(new User("Joe", "Cool", "joe.cool@email.com", 2, User.Roles.ADMIN));
-        users.add(new User("Batman", "Superman", "spiderman@email.com", 3, User.Roles.SELLER));
+        users.add(User.makeUserFromStringParams("Fred", "Thompson", "fred.thompson@email.com", "1", "CUSTOMER"));
+        users.add(User.makeUserFromStringParams("Joe", "Cool", "joe.cool@email.com", "2", "ADMIN"));
+        users.add(User.makeUserFromStringParams("Batman", "Superman", "spiderman@email.com", "3", "SELLER"));
     }
 
     private UserUtils() {

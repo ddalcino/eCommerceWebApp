@@ -56,14 +56,14 @@ public class HomeController {
 	@RequestMapping(value="/admin/user", method=RequestMethod.GET)
 	public @ResponseBody User getUser(Locale locale, Model model) {
 		System.out.println("Ajax request for a user occurred");
-		return new User("John", "Smith", "jsmith@gmail.com", 5l, User.Roles.ADMIN);
+		return User.makeUserFromStringParams("John", "Smith", "jsmith@gmail.com", "5", "ADMIN");
 	}
 	
 	@RequestMapping(value="/admin/deleteUser/{userid}", method=RequestMethod.GET, produces="application/json")
 	public @ResponseBody boolean deleteUser(@PathVariable long userid, HttpServletRequest request) {
 		System.out.println("Ajax request to delete a user with userid="+ userid +" occurred");
 		User admin = (User) request.getSession().getAttribute("user");
-		if (admin != null && admin.getRole() == User.Roles.ADMIN) {
+		if (admin != null && admin.hasAdminPrivileges()) {
 		
 			//UserUtils.removeUser(userid);
 			return UserUtils.removeUser(userid);
@@ -163,7 +163,7 @@ public class HomeController {
 	@RequestMapping(value = "/admin", method=RequestMethod.GET)
 	public String admin(Locale locale, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
-		if (user == null || user.getRole() != User.Roles.ADMIN) {
+		if (user == null || !user.hasAdminPrivileges()) {
 			return "redirect:/";
 		} else {
 			model.addAttribute("user", user);
@@ -188,7 +188,7 @@ public class HomeController {
 	public String updateUser(Locale locale, Model model, HttpServletRequest request) {
 		logger.info("Updating a user");
 		User user = (User) request.getSession().getAttribute("user");
-		if (user == null || user.getRole() != User.Roles.ADMIN) {
+		if (user == null || !user.hasAdminPrivileges()) {
 			return "redirect:/";
 		} else {
 	        String fName = request.getParameter("firstname");

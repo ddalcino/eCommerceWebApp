@@ -75,15 +75,13 @@ public class DBUtils {
      * @return		corresponding user object
      * @throws SQLException
      */
-    public static User getUserFromResultSet(ResultSet rs) throws SQLException, NumberFormatException {
-    	long userid = Long.parseLong(rs.getString(Contract.USER_ID));
-    	Roles role = User.str2role(rs.getString(Contract.ROLE));
-    	return new User(
+    public static User getUserFromResultSet(ResultSet rs) throws SQLException {
+    	return User.makeUserFromStringParams(
                 rs.getString(Contract.F_NAME),
                 rs.getString(Contract.L_NAME),
                 rs.getString(Contract.EMAIL),
-                userid,
-                role);
+                rs.getString(Contract.USER_ID),	// user_id is stored as a long
+                rs.getString(Contract.ROLE));	// role is stored as an int value (0-2)
     }
     
     /**

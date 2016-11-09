@@ -86,7 +86,7 @@ public class User implements Serializable {
         this("", "", "", UNINITIALIZED_USER_ID, DEFAULT_ROLE);
     }
     
-    public User(String firstName, String lastName, String email, long userid, Roles role) {
+    private User(String firstName, String lastName, String email, long userid, Roles role) {
         this.role = role;
         this.firstName = HtmlUtils.htmlEscape(firstName);
         this.lastName = HtmlUtils.htmlEscape(lastName);
@@ -102,11 +102,11 @@ public class User implements Serializable {
     		String strUserId, String strRole) {
     	long userid = UNINITIALIZED_USER_ID;
     	try {
-    		Logger.getAnonymousLogger().log(Level.INFO, "User.makeUserFromStringParams() tried to parse long from uid " + strUserId);
+    		Logger.getAnonymousLogger().log(Level.INFO, "Tried to parse long from uid " + strUserId);
     		userid = Long.parseLong(strUserId);
-    		Logger.getAnonymousLogger().log(Level.INFO, "User: Got uid " + userid);
+    		Logger.getAnonymousLogger().log(Level.INFO, "Got uid " + userid);
     	} catch (NumberFormatException e) {
-    		Logger.getAnonymousLogger().log(Level.INFO, "User: Failed to parse long from uid " + strUserId);
+    		Logger.getAnonymousLogger().log(Level.INFO, "Failed to parse long from uid " + strUserId);
     		return null;
     	}
     	return new User(firstName, lastName, email, userid, str2role(strRole));
@@ -164,6 +164,14 @@ public class User implements Serializable {
      */
     public boolean isUseridValid() {
     	return userid > UNINITIALIZED_USER_ID;
+    }
+    
+    public boolean hasAdminPrivileges() {
+    	return role == Roles.ADMIN;
+    }
+    
+    public boolean hasSellerPrivileges() {
+    	return role == Roles.SELLER; // || role == Roles.ADMIN;
     }
     
     @Override
