@@ -75,9 +75,9 @@ public class DBUtils {
      * @return		corresponding user object
      * @throws SQLException
      */
-    public static User getUserFromResultSet(ResultSet rs) throws SQLException {
+    public static User getUserFromResultSet(ResultSet rs) throws SQLException, NumberFormatException {
     	long userid = Long.parseLong(rs.getString(Contract.USER_ID));
-    	Roles role = User.int2role(rs.getString(Contract.ROLE));
+    	Roles role = User.str2role(rs.getString(Contract.ROLE));
     	return new User(
                 rs.getString(Contract.F_NAME),
                 rs.getString(Contract.L_NAME),

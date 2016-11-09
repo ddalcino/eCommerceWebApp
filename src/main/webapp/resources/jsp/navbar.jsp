@@ -21,12 +21,12 @@
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">
-                        <li><a href="/CS6320Fall2016/login#registerDiv"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                        <li><a href="/CS6320Fall2016/login#loginDiv"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li><a href="<c:url value="/login#registerDiv"/>"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="<c:url value="/login#loginDiv"/>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="#"><span class="glyphicon glyphicon-user"></span> <c:out value="${sessionScope.user.email}" /></a></li>
-                        <li><a href="/CS6320Fall2016/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>

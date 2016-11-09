@@ -86,7 +86,7 @@ and open the template in the editor.
                     </div>
                     <div id="loginDiv" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            <form action="auth/login" class="form-horizontal" method="post">
+                            <form action="<c:url value="/auth/login"/>" class="form-horizontal" method="post">
                                 <div class="form-group">
                                     <label class="control-label col-md-2" for="email">Email</label>
                                     <div class="col-md-10">
@@ -119,7 +119,7 @@ and open the template in the editor.
                     </div>
                     <div id="registerDiv" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form action="auth/register" class="form-horizontal" 
+                            <form action="<c:url value="/auth/register"/>" class="form-horizontal" 
                                   onsubmit="return validateRegistration();" method="post">
                                 <div class="form-group">
                                     <label class="control-label col-md-2" for="firstname">First name</label>

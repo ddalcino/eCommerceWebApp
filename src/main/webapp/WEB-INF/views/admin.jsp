@@ -28,12 +28,14 @@
                     var lname = row.eq(1).text();
                     var email = row.eq(2).text();
                     var role = row.eq(3).text();
-                    
+                    var userid = row.eq(4).text();
+                   
                     // set default values
                     $('[name=firstname]').val(fname);
                     $('[name=lastname]').val(lname);
                     $('[name=email]').val(email);
                     $('[name=email1]').val(email);
+                    $('[name=userid]').val(userid);
                     if (role === "CUSTOMER") {
                         $("#newRole option").eq(0).prop('selected', true);
                     } else if (role === "SELLER") {
@@ -43,7 +45,7 @@
                     }
                 });
                 $("#action_button").click(function () {
-                	$.get("/cs6320/admin/user", function(data, status){
+                	$.get("<c:url value="/admin/user"/>", function(data, status){
                 		var stringRep = ""
                 		for (key in data) {
                 			stringRep += "data[\"" + key + "\"] = " + data[key] + "\n"
@@ -52,7 +54,7 @@
                 				"\nData members: " + data.firstName + " " + data.lastName +
                 				"\nStatus: " + status
                 				);
-                		$("#stuff").text(data.firstname);
+                		$("#stuff").text("stuff!" + data.firstName);
                 	})
                 })
                 $("button[id^='delete_user']").click(function () {
@@ -61,7 +63,7 @@
                 	//alert("Trying to delete user with id="+userid)
                 	//var row = $(this).parent().parent().parent().children("td");
                 	//var email = row.eq(2).text();
-                 	$.get("/cs6320/admin/deleteUser/" + userid, function(data, status){
+                 	$.get("<c:url value="/admin/deleteUser/"/>" + userid, function(data, status){
                  		if (status == "success" && data == true) {
                  			this_row.remove();
                 			//alert("Deleted that user!!!");
@@ -131,19 +133,17 @@
                                     <td class="lastname">${user.lastName}</td>
                                     <td class="email">${user.email}</td>
                                     <td class="role">${user.role}</td>
-                                    <td class="role">${user.userid}</td>
+                                    <td class="userid">${user.userid}</td>
                                     <td>
                                         <form action="admin" class="form-horizontal" method="post">
                                             <input type="hidden" name="email" value="${user.email}">
-                                            <input type="hidden" name="actionType" value="delete">
-                                            <button class="btn btn-default">Delete</button>
                                             <!-- Trigger the modal with a button -->
                                             <button type="button" class="btn btn-default update_btn" 
                                                     data-toggle="modal" data-target="#myModal">
                                                 Update
                                             </button>
-                                            <button id="delete_user_${user.email}" type="button" class="btn btn-default">
-                                                Delete w/Ajax
+                                            <button id="delete_user_${user.userid}" type="button" class="btn btn-default">
+                                                Delete
                                             </button>
                                         </form>
                                     </td>
@@ -167,9 +167,9 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Update User</h4>
                     </div>
-                    <form action="admin" class="form-horizontal" method="post">
+                    <form action="<c:url value="/admin/update"/>" class="form-horizontal" method="post">
                         <div class="modal-body">
-                            <input type="hidden" name="actionType" value="update"/>
+                            <!--<input type="hidden" name="actionType" value="update"/>-->
                             <input type="hidden" name="email" value=""/>
                             <input type="hidden" name="userid" value=""/>
                             <input type="hidden" name="role" value=""/>

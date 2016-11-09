@@ -7,6 +7,8 @@ package edu.csueb.cs6320.utils;
 
 import edu.csueb.cs6320.bean.User;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import java.util.function.Predicate;
 
 /**
@@ -32,10 +34,12 @@ public class UserUtils {
     }
     
     public static boolean createUser(User user, String newPassword) {
-    	return DBUtils.createUser(user, newPassword);
+    	return users.add(user);
+    	//return DBUtils.createUser(user, newPassword);
     }
 
     public static boolean removeUser(long userid) {
+    	//DBUtils.deleteUser(userid);
     	for (User user : users) {
     		if (user.getUserid() == userid) {
     			System.out.println("Userid matches " + userid + ", now deleting"); 
@@ -48,15 +52,19 @@ public class UserUtils {
     	}
         return false;
     }
-    public static boolean updateUser(String email, User newData) {
+    public static boolean updateUser(long userid, User newData) {
         int index = 0;
         for (User user : users) {
-            if (user.getEmail().equals(email)) {
+            if (user.getUserid() == userid) {
                 user.setEmail(newData.getEmail());
                 user.setFirstName(newData.getFirstName());
                 user.setLastName(newData.getLastName());
                 user.setRole(newData.getRole());
                 users.set(index, user);
+                Logger.getAnonymousLogger().log(Level.INFO, "updated user: " + user);
+                for (User u : users) {
+                	Logger.getAnonymousLogger().log(Level.INFO, "user= " + u);
+                }
                 return true;
             } else {
                 index++;

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysql.jdbc.log.Log;
+
 import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.Auth;
 import edu.csueb.cs6320.utils.DBUtils;
@@ -49,101 +51,11 @@ public class HomeController {
 		return UrlNames.LOGIN_JSP;		// accesses home.jsp
 	}
 	
-//	@RequestMapping(value = "/login", method = RequestMethod.POST)
-//	public String login(Locale locale, Model model) {
-//        String url = UrlNames.LOGIN_JSP;
-//        boolean loginSuccess = false;
-//        try {
-//            String formType = model.
-//            		
-//            		request.getParameter("formType");
-//            
-//            if (formType.equals("login")) {
-//
-//                String email = request.getParameter("email");
-//                String password = request.getParameter("password");
-//
-//                // do some logic to validate credentials
-//                User user = Auth.authenticateLogin(email, password);
-//
-//                // if we retrieved a user object, we are logged in
-//                if (user != null) {
-//                    user.setEmail(email);
-//                    user.setRole(User.Roles.ADMIN);
-//                    request.getSession().setAttribute("user", user);
-//                    loginSuccess=true;
-////                    response.sendRedirect(UrlNames.LANDING_PAGE);
-////                    return;
-//                    //TODO: move this to LandingPageServlet
-//                    
-//                    // this version of Auth doesn't make real users yet, 
-//                    // but we can fake it by adding the user's email to the 
-//                    // object
-////                    url = UrlNames.LANDING_JSP;
-////                    if (user.getRole() == User.Roles.ADMIN) {
-////                        ArrayList<User> users = AdminTools.getUserList();
-////                        request.setAttribute("users", users);
-////                    }
-//                } else {
-//                    url = UrlNames.LOGIN_JSP;
-//                    request.setAttribute("statusMsg", 
-//                            "Invalid username/password combination!");
-//                }
-//            } else if (formType.equals("register")) {
-//                boolean success = true;
-//                
-//                String fName = request.getParameter("firstname");
-//                String lName = request.getParameter("lastname");
-//
-//                String email = request.getParameter("email1");
-//                String email2 = request.getParameter("email2");
-//                String password = request.getParameter("password1");
-//                String password2 = request.getParameter("password2");
-//                
-//                if(     fName != null && lName != null &&
-//                        email != null && email2 != null &&
-//                        password != null && password2 != null && 
-//                        email.equals(email2) && password.equals(password2)) {
-//                    if (Auth.isDuplicateEmailAddress(email)) {
-//                        request.setAttribute("statusMsg",
-//                                "Registration failed; there is already a " +
-//                                "user with that email address. Did you " +
-//                                "forget your password? Please use the " +
-//                                "password recovery feature, as soon as" +
-//                                "we implement one.");
-//                        success = false;
-//                    } else {
-//                        request.setAttribute("statusMsg",
-//                                "Successfully made new user with email=" +
-//                                email + "; now try to log in!");
-//                        success = true;
-//                    }
-//                    
-//                } else {
-//                    request.setAttribute("statusMsg", 
-//                            "Registration failed; emails must match each " +
-//                            "other, and passwords must match each other.");
-//                    success = false;
-//                }
-//                
-//            }
-//        } catch (Exception e) {
-//            System.err.println("Error occurred in " + this.getClass() +
-//                    "\n" + e.getMessage());
-//            e.printStackTrace();
-//        } finally {
-//            if (loginSuccess) response.sendRedirect(UrlNames.ADMIN_PAGE);
-//            else this.getServletContext().getRequestDispatcher(url).forward(request, response);
-//        }
-//		
-//		
-//		return UrlNames.LOGIN_JSP;
-//	}
+
 	
 	@RequestMapping(value="/admin/user", method=RequestMethod.GET)
 	public @ResponseBody User getUser(Locale locale, Model model) {
 		System.out.println("Ajax request for a user occurred");
-		System.out.println(DBUtils.getCreateTableStmt());
 		return new User("John", "Smith", "jsmith@gmail.com", 5l, User.Roles.ADMIN);
 	}
 	
@@ -160,6 +72,11 @@ public class HomeController {
 			System.out.println("Ajax request to delete a user cannot be serviced because user is not an admin.");
 			return false;
 		}
+	}
+	@RequestMapping(value = "/logout")
+	public String logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
@@ -219,6 +136,10 @@ public class HomeController {
 	                        "Successfully made new user with email=" +
 	                        email + "; now try to log in!");
 //	                success = true;
+            	} else {
+            		request.setAttribute("statusMsg",
+	                        "Failed to make new user with email=" + email + 
+	                        "; please send complaints to /dev/null!");
             	}
             }
             
@@ -242,13 +163,47 @@ public class HomeController {
 	@RequestMapping(value = "/admin", method=RequestMethod.GET)
 	public String admin(Locale locale, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
-		if (user == null) {
+		if (user == null || user.getRole() != User.Roles.ADMIN) {
 			return "redirect:/";
 		} else {
 			model.addAttribute("user", user);
 			ArrayList<User> users = UserUtils.getUserList();
 			model.addAttribute("users", users);
 			return UrlNames.ADMIN_JSP;
+		}
+	}
+	
+	/**
+	 * Servlet for updating a User. 
+	 * Request must contain string values for firstname, lastname, email1, and role, 
+	 * as well as a correct long for userid; otherwise, the operation will fail.
+	 * If the user recorded in the session does not have the Admin role, the operation
+	 * will fail, and the user will be redirected to the login page.
+	 * @param locale
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/admin/update", method=RequestMethod.POST)
+	public String updateUser(Locale locale, Model model, HttpServletRequest request) {
+		logger.info("Updating a user");
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null || user.getRole() != User.Roles.ADMIN) {
+			return "redirect:/";
+		} else {
+	        String fName = request.getParameter("firstname");
+	        String lName = request.getParameter("lastname");
+	        String email = request.getParameter("email1");
+	        String struserid = request.getParameter("userid");
+	        String role = request.getParameter("role");
+	        User newUser = User.makeUserFromStringParams(fName, lName, email, struserid, role);
+	        if (newUser != null && newUser.isValid()) {
+	        	UserUtils.updateUser(newUser.getUserid(), newUser);
+	    		logger.info("Successfully updated user "+ newUser);
+	        } else {
+	    		logger.info("Failed to update user "+ newUser);
+	        }
+			return "redirect:/admin";
 		}
 	}
 	

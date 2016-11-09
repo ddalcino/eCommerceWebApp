@@ -35,7 +35,7 @@ public class Auth {
     public static User authenticateLogin(String email, String password) {
         //TODO: check database for login credentials: if invalid, return null; 
         //else return a User object
-        return new User("defaultFname", "defaultLname", "defaultEmail", User.INVALID_USER_ID, User.DEFAULT_ROLE);
+        return User.makeUserFromNameEmail("defaultFname", "defaultLname", "defaultEmail");
     }
     
     
