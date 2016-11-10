@@ -14,8 +14,8 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.csueb.cs6320.bean.User;
-import edu.csueb.cs6320.bean.User.Roles;
+import edu.csueb.cs6320.bean.user.User;
+import edu.csueb.cs6320.bean.user.User.Roles;
 
 /**
  *

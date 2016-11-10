@@ -1,4 +1,4 @@
-package edu.csueb.cs6320.bean;
+package edu.csueb.cs6320.bean.user;
 
 import java.io.Serializable;
 import java.util.EnumMap;
@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.web.util.HtmlUtils;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class User implements Serializable {
     /**
@@ -147,8 +149,9 @@ public class User implements Serializable {
     public Roles getRole() {
         return role;
     }
-
+    @JsonDeserialize(using = UserDeserializer.class)
     public void setRole(Roles role) {
+    	Logger.getAnonymousLogger().log(Level.INFO, "Somebody set my role to: " + role);
         this.role = role;
     }
     

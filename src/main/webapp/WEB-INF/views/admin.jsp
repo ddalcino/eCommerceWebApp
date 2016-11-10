@@ -11,9 +11,6 @@
         <%@include file="/resources/jsp/header.jsp" %>
 
         <script type='text/javascript'>
-            function dontSend() {
-                return false;
-            }
             function setRole() {
                 $('[name=role]').val( $("#newRole").prop("selectedIndex") );
                 return true;
@@ -31,10 +28,9 @@
                     var userid = row.eq(4).text();
                    
                     // set default values
-                    $('[name=firstname]').val(fname);
-                    $('[name=lastname]').val(lname);
+                    $('[name=firstName]').val(fname);
+                    $('[name=lastName]').val(lname);
                     $('[name=email]').val(email);
-                    $('[name=email1]').val(email);
                     $('[name=userid]').val(userid);
                     if (role === "CUSTOMER") {
                         $("#newRole option").eq(0).prop('selected', true);
@@ -44,19 +40,6 @@
                         $("#newRole option").eq(2).prop('selected', true);
                     }
                 });
-                $("#action_button").click(function () {
-                	$.get("<c:url value="/admin/user"/>", function(data, status){
-                		var stringRep = ""
-                		for (key in data) {
-                			stringRep += "data[\"" + key + "\"] = " + data[key] + "\n"
-                		}
-                		alert("Data: " + stringRep +
-                				"\nData members: " + data.firstName + " " + data.lastName +
-                				"\nStatus: " + status
-                				);
-                		$("#stuff").text("stuff!" + data.firstName);
-                	})
-                })
                 $("button[id^='delete_user']").click(function () {
                 	var this_row = $(this).closest('tr');
                 	var userid = this_row.children("td").eq(4).text();
@@ -73,6 +56,39 @@
                  		//alert("Callback fn");
                  		
 	               	})
+                })
+                $("#modalUpdateBtn").click(function () {
+                	// Send changes to servlet via Ajax, not Http Post
+                	// We need to send the changed names, email, and role, 
+                	// and pair them with the userid 
+                    var fname = $('[name=firstName]').val();
+                    var lname = $('[name=lastName]').val();
+                    var email = $('[name=email]').val();
+                    var uid = $('[name=userid]').val();
+                    var roleIndex = $("#newRole").prop("selectedIndex");
+                    var role = $("#newRole").val().toUpperCase();
+                    $('[name=role]').val(role);
+
+                    var jsonUser = {
+                    		firstName: fname,
+                    		lastName: lname,
+                    		email: email,
+                    		userid: uid,
+                    		role: role
+                    };
+                    $.post('<c:url value="/admin/update"/>/jsonUser/', 
+                    	jsonUser,
+                    	function(data, status) {
+                    		if (status == "success" && data == true) {
+	                    		// find row with correct userid and update it
+	                    		var row = $("#userid_" + uid).children("td");
+	                            row.eq(0).text(fname);
+	                            row.eq(1).text(lname);
+	                            row.eq(2).text(email);
+	                            row.eq(3).text(role);
+	                            row.eq(4).text(uid);
+                    		}
+                    });
                 })
             })
            </script>
@@ -128,15 +144,15 @@
                         </thead>
                         <tbody>
                             <c:forEach var="user" items="${users}">
-                                <tr>
+                                <tr id="userid_${user.userid}">
                                     <td class="firstname">${user.firstName}</td>
                                     <td class="lastname">${user.lastName}</td>
                                     <td class="email">${user.email}</td>
                                     <td class="role">${user.role}</td>
                                     <td class="userid">${user.userid}</td>
                                     <td>
-                                        <form action="admin" class="form-horizontal" method="post">
-                                            <input type="hidden" name="email" value="${user.email}">
+                                        <form class="form-horizontal" method="post">
+                                            <!-- <input type="hidden" name="email" value="${user.email}"> -->
                                             <!-- Trigger the modal with a button -->
                                             <button type="button" class="btn btn-default update_btn" 
                                                     data-toggle="modal" data-target="#myModal">
@@ -153,8 +169,6 @@
                     </table>
                 </div>
             </div>
-            <button type="button" id="action_button" class="btn btn-default"> Ajax </button>
-            <span id="stuff"></span>
         </div>
 
         <!-- Modal -->
@@ -167,28 +181,28 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Update User</h4>
                     </div>
-                    <form action="<c:url value="/admin/update"/>" class="form-horizontal" method="post">
-                        <div class="modal-body">
+                    <%-- <form action="<c:url value="/admin/update"/>" class="form-horizontal" method="post"> --%>
+                    <div class="modal-body">
+                    	<form class="form-horizontal">
                             <!--<input type="hidden" name="actionType" value="update"/>-->
-                            <input type="hidden" name="email" value=""/>
                             <input type="hidden" name="userid" value=""/>
                             <input type="hidden" name="role" value=""/>
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="firstname">First name</label>
+                                <label class="control-label col-md-3" for="firstName">First name</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" name="firstname" required/>
+                                    <input class="form-control" type="text" name="firstName" required/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="lastname">Last name</label>
+                                <label class="control-label col-md-3" for="lastName">Last name</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" name="lastname" required/>
+                                    <input class="form-control" type="text" name="lastName" required/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="email1">Email</label>
+                                <label class="control-label col-md-3" for="email">Email</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="email" name="email1"/>
+                                    <input class="form-control" type="email" name="email"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -201,16 +215,16 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" type="submit" onclick="setRole();" value="Register">
-                                Update
-                            </button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="dontSend();">
-                                Close
-                            </button>
-                        </div>
-                    </form>
+                    	</form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalUpdateBtn" class="btn btn-default" data-dismiss="modal">
+                            Update
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
                 </div>
 
             </div>

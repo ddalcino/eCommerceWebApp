@@ -5,11 +5,12 @@
  */
 package edu.csueb.cs6320.utils;
 
-import edu.csueb.cs6320.bean.User;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import java.util.function.Predicate;
+
+import edu.csueb.cs6320.bean.user.User;
 
 /**
  *

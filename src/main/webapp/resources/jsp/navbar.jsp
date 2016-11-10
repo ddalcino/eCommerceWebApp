@@ -11,21 +11,25 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <c:if test="${sessionScope.user != null}">
-
                     <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Page 1</a></li>
-                    <li><a href="#">Page 2</a></li> 
-                    <li><a href="#">Page 3</a></li> 
+                    <c:forEach var="navbarItem" items="${requestScope.navbarItems}">
+                        <li${(navbarItem.isActive ? " class=\"active\"": "")}>
+                            <a href="${navbarItem.href}"><c:out value="${navbarItem.label}"/></a>
+                        </li>
+                    </c:forEach>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">
-                        <li><a href="<c:url value="/login#registerDiv"/>"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                        <li><a href="<c:url value="/login#loginDiv"/>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li><a href="<c:url value="/#registerDiv"/>"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="<c:url value="/#loginDiv"/>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> <c:out value="${sessionScope.user.email}" /></a></li>
+                        <li>
+                        	<a href="<c:url value="/settings"/>"><span class="glyphicon glyphicon-user"></span> 
+                        	<c:out value="${sessionScope.user.email}" /></a>
+                        </li>
                         <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </c:otherwise>
                 </c:choose>

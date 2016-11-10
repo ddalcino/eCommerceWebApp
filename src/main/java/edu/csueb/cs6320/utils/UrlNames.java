@@ -9,7 +9,8 @@ public class UrlNames {
 
    public static final String 
            LOGIN_JSP = "home",
-           ADMIN_JSP = "admin"
+           ADMIN_JSP = "admin",
+           SETTINGS_JSP = "settings"
 //           LANDING_PAGE = ROOT_URL + "/landing",
 //           LANDING_JSP = "/landingPage.jsp",
 //           ADMIN_PAGE = ROOT_URL + "/admin",
