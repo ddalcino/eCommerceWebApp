@@ -39,14 +39,6 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)	//If you leave method out of the annotation, by default it handles all requests
 	public String home(Locale locale, Model model) {	//Model: used to map name-value pairs & pass bw request and response
 		// We can add HttpServletRequest to the arg list; Maven will compensate appropriately
-//		logger.info("Welcome home! The client locale is {}.", locale);
-		
-//		Date date = new Date();
-//		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-//		
-//		String formattedDate = dateFormat.format(date);
-//		
-//		model.addAttribute("serverTime", formattedDate );
 		
 		return UrlNames.LOGIN_JSP;		// accesses home.jsp
 	}
@@ -224,14 +216,25 @@ public class HomeController {
     @RequestMapping(value="/admin/update/jsonUser", method=RequestMethod.POST)
     @ResponseBody
     public boolean updateUserAjax(User jsonUser) {
-    	if (jsonUser != null) {
-    		Logger.getAnonymousLogger().log(Level.INFO, "Hey, I think I recieved a JSON user object! This is what I got: " + jsonUser);
+    	// TODO: Figure out how to check 'user' attribute in session, to decide 
+    	// whether or not to try to handle the request
+    	
+//		User user = (User) request.getSession().getAttribute("user");
+//		if (user == null || !user.hasAdminPrivileges()) {
+//			return "redirect:/";
+//		} else {
+			
+		
+		if (jsonUser != null) {
+    		Logger.getAnonymousLogger().log(Level.INFO, "Hey, I think I received"+
+    				" a JSON user object! This is what I got: " + jsonUser);
     		if (!jsonUser.isValid()) { return false; }
 	        return UserUtils.updateUser(jsonUser.getUserid(), jsonUser); // jsonUser.isValid();
     	} else {
     		Logger.getAnonymousLogger().log(Level.INFO, "Received a null JSON user object!");
     		return false;
     	}
+		
     }
 
 	
