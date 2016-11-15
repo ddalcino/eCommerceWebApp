@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 //import java.util.function.Predicate;
 
-import edu.csueb.cs6320.bean.user.User;
+import edu.csueb.cs6320.bean.User;
 
 /**
  *

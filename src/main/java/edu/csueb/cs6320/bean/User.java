@@ -1,4 +1,4 @@
-package edu.csueb.cs6320.bean.user;
+package edu.csueb.cs6320.bean;
 
 import java.io.Serializable;
 import java.util.HashMap;

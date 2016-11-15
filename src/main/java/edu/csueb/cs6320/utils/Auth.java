@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 
-import edu.csueb.cs6320.bean.user.User;
+import edu.csueb.cs6320.bean.User;
 
 /**
  *

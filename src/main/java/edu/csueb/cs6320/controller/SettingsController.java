@@ -19,7 +19,14 @@ import edu.csueb.cs6320.utils.UrlNames;
 public class SettingsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
+
 	
+	@RequestMapping(value = "/settings", method = RequestMethod.GET)
+	public String settings(Locale locale, Model model) {
+		return UrlNames.SETTINGS_JSP;
+	}
+	
+
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
