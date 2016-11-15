@@ -1,8 +1,6 @@
 package edu.csueb.cs6320.controller;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -215,27 +213,23 @@ public class HomeController {
 	 */
     @RequestMapping(value="/admin/update/jsonUser", method=RequestMethod.POST)
     @ResponseBody
-    public boolean updateUserAjax(User jsonUser) {
-    	// TODO: Figure out how to check 'user' attribute in session, to decide 
-    	// whether or not to try to handle the request
-    	
-//		User user = (User) request.getSession().getAttribute("user");
-//		if (user == null || !user.hasAdminPrivileges()) {
-//			return "redirect:/";
-//		} else {
-			
-		
-		if (jsonUser != null) {
-    		Logger.getAnonymousLogger().log(Level.INFO, "Hey, I think I received"+
-    				" a JSON user object! This is what I got: " + jsonUser);
-    		if (!jsonUser.isValid()) { return false; }
-	        return UserUtils.updateUser(jsonUser.getUserid(), jsonUser); // jsonUser.isValid();
-    	} else {
-    		Logger.getAnonymousLogger().log(Level.INFO, "Received a null JSON user object!");
-    		return false;
-    	}
-		
-    }
+    public boolean updateUserAjax(User jsonUser, HttpServletRequest request) {
+		User admin = (User) request.getSession().getAttribute("user");
+		if (admin == null || !admin.hasAdminPrivileges()) {
+    		Logger.getAnonymousLogger().log(Level.INFO, "User withour admin "+
+    				"privileges has attempted to modify a user, but failed!");
 
-	
+			return false;
+		} else {
+			if (jsonUser != null) {
+	    		Logger.getAnonymousLogger().log(Level.INFO, "Hey, I think I received"+
+	    				" a JSON user object! This is what I got: " + jsonUser);
+	    		if (!jsonUser.isValid()) { return false; }
+		        return UserUtils.updateUser(jsonUser.getUserid(), jsonUser); // jsonUser.isValid();
+	    	} else {
+	    		Logger.getAnonymousLogger().log(Level.INFO, "Received a null JSON user object!");
+	    		return false;
+	    	}
+		}
+    }
 }

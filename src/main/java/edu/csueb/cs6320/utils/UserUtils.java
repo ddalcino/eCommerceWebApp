@@ -63,9 +63,6 @@ public class UserUtils {
                 user.setRole(newData.getRole());
                 users.set(index, user);
                 Logger.getAnonymousLogger().log(Level.INFO, "updated user: " + user);
-                for (User u : users) {
-                	Logger.getAnonymousLogger().log(Level.INFO, "user= " + u);
-                }
                 return true;
             } else {
                 index++;
