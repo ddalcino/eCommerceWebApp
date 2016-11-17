@@ -38,7 +38,10 @@ public class Auth {
         return User.makeUserFromNameEmail("defaultFname", "defaultLname", "defaultEmail");
     }
     
-    
+    /**
+     * Creates a new random salt to be used for password hashing
+     * @return
+     */
     public static String getSalt() {
         Random r = new SecureRandom();
         byte[] saltBytes = new byte[32];
@@ -59,12 +62,13 @@ public class Auth {
             }
             sb.append(Integer.toHexString(v));
         }
+        System.out.println("Salted hashed password is x chars long: " + sb.toString().length());
         return sb.toString();
     }
     
     public static boolean isCorrectPassword(String password, String salt, String saltedHashedPassword) 
             throws NoSuchAlgorithmException {
-        
+        if(saltedHashedPassword == null || saltedHashedPassword.equals("")) return false;
         return saltedHashedPassword.equals(
                 Auth.hashPassword(password, salt));
     }

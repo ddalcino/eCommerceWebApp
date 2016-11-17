@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.Auth;
 import edu.csueb.cs6320.utils.DBUtils;
 import edu.csueb.cs6320.utils.UrlNames;
-import edu.csueb.cs6320.utils.UserUtils;
+import edu.csueb.cs6320.utils.UserService;
 
 /**
  * Handles requests for the application home page.
@@ -28,6 +29,9 @@ import edu.csueb.cs6320.utils.UserUtils;
  */
 @Controller
 public class HomeController {
+	
+	@Autowired
+	private UserService userService;
 	
 	//private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -56,10 +60,12 @@ public class HomeController {
 		String password = request.getParameter("password");
 		
 		// do some logic to validate credentials
-		User user = Auth.authenticateLogin(email, password);
+		User user = userService.getAuthenticatedUser(email, password);
+				
+				//Auth.authenticateLogin(email, password);
 		// if we retrieved a user object, we are logged in
 		if (user != null) {
-			user.setEmail(email);
+			//user.setEmail(email);
 			user.setRole(User.Roles.ADMIN);
 			request.getSession().setAttribute("user", user);
 			return "redirect:/admin";
@@ -69,7 +75,7 @@ public class HomeController {
 		}
 		
 		// TODO: input validation, decide login or not
-		ArrayList<User> users = UserUtils.getUserList();
+		ArrayList<User> users = (ArrayList<User>) userService.getUserList();
 		model.addAttribute("users", users);
 		model.addAttribute("user", user);
 		return UrlNames.ADMIN_JSP;
@@ -103,7 +109,7 @@ public class HomeController {
 //                success = false;
             } else {
             	User user = User.makeUserFromNameEmail(fName, lName, email);
-            	if (UserUtils.createUser(user, password)) {
+            	if (userService.createUser(user, password)) {
 	                request.setAttribute("statusMsg",
 	                        "Successfully made new user with email=" +
 	                        email + "; now try to log in!");

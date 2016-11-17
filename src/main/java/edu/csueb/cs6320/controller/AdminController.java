@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.UrlNames;
-import edu.csueb.cs6320.utils.UserUtils;
+import edu.csueb.cs6320.utils.UserService;
 
 /**
  * Handles requests for the application Admin page.
@@ -24,6 +25,10 @@ import edu.csueb.cs6320.utils.UserUtils;
  */
 @Controller
 public class AdminController {
+	
+	@Autowired
+	private UserService userService;
+
 	@RequestMapping(value="/admin/user", method=RequestMethod.GET)
 	public @ResponseBody User getUser(Locale locale, Model model) {
 		System.out.println("Ajax request for a user occurred");
@@ -37,7 +42,10 @@ public class AdminController {
 		if (admin != null && admin.hasAdminPrivileges()) {
 		
 			//UserUtils.removeUser(userid);
-			return UserUtils.removeUser(userid);
+			userService.delete(userid); //.removeUser(userid);
+			
+			//TODO: find out wtf happened in the last call!
+			return true;
 			//return new User("John", "Smith", "jsmith@gmail.com", 5l, User.Roles.ADMIN);
 		} else {
 			System.out.println("Ajax request to delete a user cannot be serviced because user is not an admin.");
@@ -52,7 +60,7 @@ public class AdminController {
 			return "redirect:/";
 		} else {
 			model.addAttribute("user", user);
-			ArrayList<User> users = UserUtils.getUserList();
+			ArrayList<User> users = (ArrayList<User>) userService.getUserList();
 			model.addAttribute("users", users);
 			return UrlNames.ADMIN_JSP;
 		}
@@ -82,7 +90,7 @@ public class AdminController {
 	        String role = request.getParameter("role");
 	        User newUser = User.makeUserFromStringParams(fName, lName, email, struserid, role);
 	        if (newUser != null && newUser.isValid()) {
-	        	UserUtils.updateUser(newUser.getUserid(), newUser);
+	        	userService.updateUser(newUser.getUserid(), newUser);
 	    		//logger.info("Successfully updated user "+ newUser);
 	        } else {
 	    		//logger.info("Failed to update user "+ newUser);
@@ -110,7 +118,8 @@ public class AdminController {
 	    		Logger.getAnonymousLogger().log(Level.INFO, "Hey, I think I received"+
 	    				" a JSON user object! This is what I got: " + jsonUser);
 	    		if (!jsonUser.isValid()) { return false; }
-		        return UserUtils.updateUser(jsonUser.getUserid(), jsonUser); // jsonUser.isValid();
+		        userService.updateUser(jsonUser.getUserid(), jsonUser); // jsonUser.isValid();
+		        return true;
 	    	} else {
 	    		Logger.getAnonymousLogger().log(Level.INFO, "Received a null JSON user object!");
 	    		return false;

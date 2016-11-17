@@ -6,9 +6,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import org.springframework.web.util.HtmlUtils;
 
 
+@Entity
 public class User implements Serializable {
 	
 	/////////////////////////////////////////////////////////////////
@@ -36,11 +42,17 @@ public class User implements Serializable {
 	
 	/////////////////////////////////////////////////////////////////
 	// DATA MEMBERS
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long userid;
+	private Roles role;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private long userid;
-	private Roles role;
+	private String salt;
+	private String saltedHashedPassword;
+	
 	
 	
 	/////////////////////////////////////////////////////////////////
@@ -193,6 +205,18 @@ public class User implements Serializable {
 	public void setRole(Roles role) {
 		Logger.getAnonymousLogger().log(Level.INFO, "Somebody set my role to: " + role);
 		this.role = role;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	public String getSalted_hashed_password() {
+		return saltedHashedPassword;
+	}
+	public void setSalted_hashed_password(String salted_hashed_password) {
+		this.saltedHashedPassword = salted_hashed_password;
 	}
 	
 	public boolean isValid() {
