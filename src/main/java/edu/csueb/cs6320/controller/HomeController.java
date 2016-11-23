@@ -39,10 +39,12 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)	//If you leave method out of the annotation, by default it handles all requests
-	public String home(Locale locale, Model model) {	//Model: used to map name-value pairs & pass bw request and response
+	public String home(Locale locale, Model model, HttpServletRequest request) {	//Model: used to map name-value pairs & pass bw request and response
 		// We can add HttpServletRequest to the arg list; Maven will compensate appropriately
 		
-		return UrlNames.LOGIN_JSP;		// accesses home.jsp
+		// Is the user logged in?
+		User user = (User) request.getSession().getAttribute("user");
+		return chooseRedirectBasedOnPrivileges(user);
 	}
 	
 
@@ -61,24 +63,19 @@ public class HomeController {
 		
 		// do some logic to validate credentials
 		User user = userService.getAuthenticatedUser(email, password);
-				
-				//Auth.authenticateLogin(email, password);
-		// if we retrieved a user object, we are logged in
-		if (user != null) {
-			//user.setEmail(email);
-			user.setRole(User.Roles.ADMIN);
-			request.getSession().setAttribute("user", user);
-			return "redirect:/admin";
-			//loginSuccess=true;
-//          response.sendRedirect(UrlNames.LANDING_PAGE);
-//          return;
-		}
 		
-		// TODO: input validation, decide login or not
-		ArrayList<User> users = (ArrayList<User>) userService.getUserList();
-		model.addAttribute("users", users);
-		model.addAttribute("user", user);
-		return UrlNames.ADMIN_JSP;
+		if (user != null) {	// if we retrieved a user object, we are logged in
+			
+			request.getSession().setAttribute("user", user);
+			
+			// Decide which page we need to load:
+			return chooseRedirectBasedOnPrivileges(user);
+			
+		} else {			// User was not logged in!
+			model.addAttribute("statusMsg", 
+					"Login for that username/password combination has failed.");
+			return UrlNames.LOGIN_JSP;
+		}
 	}
 	
 	
@@ -128,5 +125,30 @@ public class HomeController {
 //            success = false;
         }
 		return UrlNames.LOGIN_JSP;
+	}
+
+	/**
+	 * Chooses a redirect based on user privileges. If the user has admin 
+	 * privileges, it will redirect to the admin page. If the user has seller 
+	 * privileges, it will redirect to the seller home page. Otherwise, it will
+	 * redirect to the home page.
+	 * If the user is null, it will directly load the login JSP page. In this 
+	 * case the login page will not be rendered with the proper status messages;
+	 * this method is NOT MEANT TO BE CALLED IF THE USER IS NULL, but it is
+	 * meant to be robust to null pointer errors.
+	 * @param user	The user that is logged in.
+	 * @return		A string containing the correct redirect, or the login JSP 
+	 * 				if user is null.
+	 */
+	private static String chooseRedirectBasedOnPrivileges(User user) {
+		if (user == null) {			// Not logged in: load the login page
+			return UrlNames.LOGIN_JSP;	
+		} else if (user.hasAdminPrivileges()) {
+			return "redirect:/admin";
+		} else if (user.hasSellerPrivileges()) {
+			return "redirect:/sellerHome";
+		} else {
+			return "redirect:/home";
+		}	
 	}
 }

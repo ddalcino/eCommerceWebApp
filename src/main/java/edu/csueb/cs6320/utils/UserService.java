@@ -19,6 +19,8 @@ import javax.persistence.PersistenceUnit;
 
 import org.springframework.stereotype.Service;
 
+import com.mysql.jdbc.log.Log;
+
 import edu.csueb.cs6320.bean.User;
 
 /**
@@ -38,6 +40,7 @@ public class UserService {
 		em.getTransaction().begin();
 		List<User> users = em.createQuery("SELECT u FROM User u", User.class).getResultList();
 		em.getTransaction().commit();
+		em.close();
 				
 		return users;
 	}
@@ -50,6 +53,7 @@ public class UserService {
 		em.getTransaction().begin();
 		em.remove(u);
 		em.getTransaction().commit();
+		em.close();
 		
 		return true;
 	}
@@ -69,6 +73,7 @@ public class UserService {
 		u.setLastName(alteredUser.getLastName());
 		u.setRole(alteredUser.getRole());
 		em.getTransaction().commit();
+		em.close();
 		
 		return true;
 	}
@@ -91,6 +96,7 @@ public class UserService {
 			return false;
 		}
 		em.getTransaction().commit();
+		em.close();
 
 		return true;
 	}
@@ -125,13 +131,22 @@ public class UserService {
 	public User getAuthenticatedUser(String email, String password) {
 		EntityManager em = Persistence.createEntityManagerFactory("TestPU").createEntityManager();
 		
-		
-		User u = (User) 
-				em.createQuery(
-			    "SELECT u FROM User u WHERE u.email = :inEmail")
-			    .setParameter("inEmail", email)
-			    .setMaxResults(1)
-			    .getSingleResult();
+		User u = null;
+		try {
+			u = (User) 
+					em.createQuery(
+				    "SELECT u FROM User u WHERE u.email = :inEmail")
+				    .setParameter("inEmail", email)
+				    .setMaxResults(1)
+				    .getSingleResult();
+		} catch(javax.persistence.NoResultException e){
+			System.out.println("No user found with that email");
+			return null;
+		} catch(Exception e) {
+			System.out.println("Exception occurred while trying to find user "
+					+ "by email address, of class: " + e.getClass().toGenericString());
+			e.printStackTrace();
+		}
 		
 		if (u == null) { return null; }
 		
