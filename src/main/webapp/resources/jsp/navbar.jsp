@@ -28,7 +28,8 @@
                     <c:otherwise>
                         <li>
                         	<a href="<c:url value="/settings"/>"><span class="glyphicon glyphicon-user"></span> 
-                        	<c:out value="${sessionScope.user.email}" /></a>
+                        	<span class="email"><c:out value="${sessionScope.user.email}" /></span>
+                        	</a>
                         </li>
                         <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </c:otherwise>

@@ -29,11 +29,11 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(value="/admin/user", method=RequestMethod.GET)
-	public @ResponseBody User getUser(Locale locale, Model model) {
-		System.out.println("Ajax request for a user occurred");
-		return User.makeUserFromStringParams("John", "Smith", "jsmith@gmail.com", "5", "ADMIN");
-	}
+//	@RequestMapping(value="/admin/user", method=RequestMethod.GET)
+//	public @ResponseBody User getUser(Locale locale, Model model) {
+//		System.out.println("Ajax request for a user occurred");
+//		return User.makeUserFromStringParams("John", "Smith", "jsmith@gmail.com", "5", "ADMIN");
+//	}
 	
 	@RequestMapping(value="/admin/deleteUser/{userid}", method=RequestMethod.GET, produces="application/json")
 	public @ResponseBody boolean deleteUser(@PathVariable long userid, HttpServletRequest request) {
@@ -52,6 +52,12 @@ public class AdminController {
 			return false;
 		}
 	}
+	
+	/**
+	 * Serves the admin page, but only if the user who's logged in has admin 
+	 * privileges; otherwise, it redirects to the login page.
+	 * @return	Redirect to login, or the admin page.
+	 */
 	@RequestMapping(value = "/admin", method=RequestMethod.GET)
 	public String admin(Locale locale, Model model, HttpServletRequest request) {
 		Logger.getAnonymousLogger().log(Level.INFO, "serving admin page");
@@ -65,39 +71,39 @@ public class AdminController {
 			return UrlNames.ADMIN_JSP;
 		}
 	}
-	/**
-	 * Servlet for updating a User. 
-	 * Request must contain string values for firstname, lastname, email1, and role, 
-	 * as well as a correct long for userid; otherwise, the operation will fail.
-	 * If the user recorded in the session does not have the Admin role, the operation
-	 * will fail, and the user will be redirected to the login page.
-	 * @param locale
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/admin/update", method=RequestMethod.POST)
-	public String updateUser(Locale locale, Model model, HttpServletRequest request) {
-		//logger.info("Updating a user");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user == null || !user.hasAdminPrivileges()) {
-			return "redirect:/";
-		} else {
-	        String fName = request.getParameter("firstname");
-	        String lName = request.getParameter("lastname");
-	        String email = request.getParameter("email");
-	        String struserid = request.getParameter("userid");
-	        String role = request.getParameter("role");
-	        User newUser = User.makeUserFromStringParams(fName, lName, email, struserid, role);
-	        if (newUser != null && newUser.isValid()) {
-	        	userService.updateUser(newUser.getUserid(), newUser);
-	    		//logger.info("Successfully updated user "+ newUser);
-	        } else {
-	    		//logger.info("Failed to update user "+ newUser);
-	        }
-			return "redirect:/admin";
-		}
-	}
+//	/**
+//	 * Servlet for updating a User. 
+//	 * Request must contain string values for firstname, lastname, email1, and role, 
+//	 * as well as a correct long for userid; otherwise, the operation will fail.
+//	 * If the user recorded in the session does not have the Admin role, the operation
+//	 * will fail, and the user will be redirected to the login page.
+//	 * @param locale
+//	 * @param model
+//	 * @param request
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/admin/update", method=RequestMethod.POST)
+//	public String updateUser(Locale locale, Model model, HttpServletRequest request) {
+//		//logger.info("Updating a user");
+//		User user = (User) request.getSession().getAttribute("user");
+//		if (user == null || !user.hasAdminPrivileges()) {
+//			return "redirect:/";
+//		} else {
+//	        String fName = request.getParameter("firstname");
+//	        String lName = request.getParameter("lastname");
+//	        String email = request.getParameter("email");
+//	        String struserid = request.getParameter("userid");
+//	        String role = request.getParameter("role");
+//	        User newUser = User.makeUserFromStringParams(fName, lName, email, struserid, role);
+//	        if (newUser != null && newUser.isValid()) {
+//	        	userService.updateUser(newUser.getUserid(), newUser);
+//	    		//logger.info("Successfully updated user "+ newUser);
+//	        } else {
+//	    		//logger.info("Failed to update user "+ newUser);
+//	        }
+//			return "redirect:/admin";
+//		}
+//	}
 
 	/**
 	 * Handles updates to users

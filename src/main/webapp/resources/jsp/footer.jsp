@@ -11,8 +11,11 @@
                         You are not logged in. Please log in first!!!
                     </c:if>
                     <c:if test="${user != null}">
-                        Hello, <c:out value="${user.firstName}"/> <c:out value="${user.lastName}"/>,
-                        you are logged in as <c:out value="${user.email}"/>.
+                        Hello, 
+                        <span class="fname"><c:out value="${user.firstName}"/></span>
+                        <span class="lname"><c:out value="${user.lastName}"/></span>,
+                        you are logged in as 
+                        <span class="email"><c:out value="${user.email}"/></span>.
                     </c:if>
                 </p>
             </div>
