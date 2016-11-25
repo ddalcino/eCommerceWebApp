@@ -110,7 +110,9 @@
             <c:forEach var="item" items="${sessionScope.cart}">
                 <tr id="itemid_${item.id}">
                 	<td>
-                		${item.saleItem.title}
+                		<a href='<c:url value="/item/"/>${item.saleItem.id}'>
+                			${item.saleItem.title}
+               			</a>
                 	</td>
                     <td class="seller">
                     	${item.offer.seller.firstName} 

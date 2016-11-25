@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.csueb.cs6320.bean.User;
+import edu.csueb.cs6320.utils.NavbarMaker;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.UserService;
 
@@ -66,6 +67,8 @@ public class AdminController {
 		if (user == null || !user.hasAdminPrivileges()) {
 			return "redirect:/";
 		} else {
+			request.setAttribute("navbarItems", 
+					NavbarMaker.getNavbarItems(user, NavbarMaker.Names.ADMIN));
 			model.addAttribute("user", user);
 			ArrayList<User> users = (ArrayList<User>) userService.getUserList();
 			model.addAttribute("users", users);

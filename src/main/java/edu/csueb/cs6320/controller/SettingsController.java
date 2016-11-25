@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.csueb.cs6320.bean.User;
+import edu.csueb.cs6320.utils.NavbarMaker;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.UserService;
 
@@ -32,7 +33,10 @@ public class SettingsController {
 
 	
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
-	public String settings(Locale locale, Model model) {
+	public String settings(Locale locale, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute("user");
+		request.setAttribute("navbarItems", 
+				NavbarMaker.getNavbarItems(user, NavbarMaker.Names.SETTINGS));
 		return UrlNames.SETTINGS_JSP;
 	}
 	

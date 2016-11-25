@@ -20,6 +20,7 @@ import edu.csueb.cs6320.bean.CartItem;
 import edu.csueb.cs6320.bean.SaleItemOffer;
 import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.CartService;
+import edu.csueb.cs6320.utils.NavbarMaker;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.SaleItemOfferService;
 import edu.csueb.cs6320.utils.SaleItemService;
@@ -41,6 +42,8 @@ public class CartController {
 			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
 		if (user != null && user.isUseridValid()) {
+			request.setAttribute("navbarItems", 
+					NavbarMaker.getNavbarItems(user, null));
 			model.addAttribute("user", user);
 			model.addAttribute("cart", cartService.getCartContents(user.getUserid()));
 			return UrlNames.CART_JSP;

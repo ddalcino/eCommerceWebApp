@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.csueb.cs6320.bean.SaleItem;
 import edu.csueb.cs6320.bean.SaleItemOffer;
 import edu.csueb.cs6320.bean.User;
+import edu.csueb.cs6320.utils.NavbarMaker;
 import edu.csueb.cs6320.utils.SaleItemOfferService;
 import edu.csueb.cs6320.utils.SaleItemService;
 import edu.csueb.cs6320.utils.UrlNames;
@@ -34,6 +35,8 @@ public class ItemController {
 			Model model, 
 			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
+		request.setAttribute("navbarItems", 
+				NavbarMaker.getNavbarItems(user, null));
 		if (user != null) {
 			model.addAttribute("user", user);
 		}

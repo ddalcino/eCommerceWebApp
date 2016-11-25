@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%-- 
-    Document   : landingPage
+    Document   : settingsPage
     Created on : Oct 3, 2016, 7:57:18 PM
     Author     : dave
 --%>

@@ -22,8 +22,10 @@
             			
             			// add a new row to the dropdown cart
             			var table = $("#embedCartTable")
-            			table.append('<tr><td>' +data.saleItem.title +
-            					'</td><td class="seller">' + 
+            			table.append('<tr>' + 
+            					'<td> <a href="<c:url value="/item/"/>' + data.saleItem.id + '">' +
+            						data.saleItem.title +
+            					'</a></td><td class="seller">' + 
             					data.offer.seller.firstName + ' ' + data.offer.seller.lastName + 
          	   					'</td><td class="price">' + data.offer.price + 
          	   					'</td><td>' +
@@ -35,7 +37,8 @@
                         			'Delete</button>' +
                             	'<button type="button" class="btn btn-default update_qty">' +
                             		'Change Quantity' +
-                            	'</button>' + '</td></tr>');
+                            	'</button>' + 
+                            	'</td></tr>');
             			
             			//now increment cart size
             			var oldSize = parseInt($("#cartSize").text());

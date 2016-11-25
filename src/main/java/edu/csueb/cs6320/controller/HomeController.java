@@ -21,6 +21,8 @@ import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.Auth;
 import edu.csueb.cs6320.utils.CartService;
 import edu.csueb.cs6320.utils.DBUtils;
+import edu.csueb.cs6320.utils.NavbarMaker;
+import edu.csueb.cs6320.utils.SaleItemService;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.UserService;
 
@@ -35,21 +37,33 @@ public class HomeController {
 	private UserService userService;
 	@Autowired
 	private CartService cartService;
+	@Autowired
+	private SaleItemService saleItemService;
 
 	//private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
-	 * Simply selects the home view to render by returning its name.
+	 * Simply selects the login view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)	//If you leave method out of the annotation, by default it handles all requests
-	public String home(Locale locale, Model model, HttpServletRequest request) {	//Model: used to map name-value pairs & pass bw request and response
+	public String loginOrRegister(Locale locale, Model model, HttpServletRequest request) {	//Model: used to map name-value pairs & pass bw request and response
 		// We can add HttpServletRequest to the arg list; Maven will compensate appropriately
 		
 		// Is the user logged in?
 		User user = (User) request.getSession().getAttribute("user");
+		request.setAttribute("navbarItems", 
+				NavbarMaker.getNavbarItems(user, null));
 		return chooseRedirectBasedOnPrivileges(user);
 	}
 	
+	@RequestMapping(value = "/home", method = RequestMethod.GET)	//If you leave method out of the annotation, by default it handles all requests
+	public String home(Locale locale, Model model, HttpServletRequest request) {	//Model: used to map name-value pairs & pass bw request and response
+		User user = (User) request.getSession().getAttribute("user");
+		request.setAttribute("navbarItems", 
+				NavbarMaker.getNavbarItems(user, NavbarMaker.Names.HOME));
+		request.setAttribute("saleItems", saleItemService.getSaleItemList());
+		return UrlNames.HOME_JSP;
+	}
 
 	
 	@RequestMapping(value = "/logout")

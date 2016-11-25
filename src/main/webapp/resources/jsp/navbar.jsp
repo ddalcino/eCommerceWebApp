@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <c:if test="${sessionScope.user != null}">
-                    <li class="active"><a href="#">Home</a></li>
+                    <!-- <li class="active"><a href="#">Home</a></li> -->
                     <c:forEach var="navbarItem" items="${requestScope.navbarItems}">
                         <li${(navbarItem.isActive ? " class=\"active\"": "")}>
                             <a href="${navbarItem.href}"><c:out value="${navbarItem.label}"/></a>
