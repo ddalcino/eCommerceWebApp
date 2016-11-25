@@ -89,7 +89,7 @@ public class UserService {
     	String salt = Auth.getSalt();
     	u.setSalt(salt);
     	try {
-			u.setSalted_hashed_password(Auth.hashPassword(newPassword, salt));
+			u.setSaltedHashedPassword(Auth.hashPassword(newPassword, salt));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			em.getTransaction().rollback();
@@ -115,7 +115,7 @@ public class UserService {
 		if (u == null) { return false; }
 		
 		try {
-			return Auth.isCorrectPassword(password, u.getSalt(), u.getSalted_hashed_password());
+			return Auth.isCorrectPassword(password, u.getSalt(), u.getSaltedHashedPassword());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
@@ -151,7 +151,7 @@ public class UserService {
 		if (u == null) { return null; }
 		
 		try {
-			if (Auth.isCorrectPassword(password, u.getSalt(), u.getSalted_hashed_password())) {
+			if (Auth.isCorrectPassword(password, u.getSalt(), u.getSaltedHashedPassword())) {
 				return u;
 			}
 		} catch (NoSuchAlgorithmException e) {
@@ -183,7 +183,7 @@ public class UserService {
     	String salt = Auth.getSalt();
     	user.setSalt(salt);
     	try {
-			user.setSalted_hashed_password(Auth.hashPassword(newPassword, salt));
+			user.setSaltedHashedPassword(Auth.hashPassword(newPassword, salt));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;

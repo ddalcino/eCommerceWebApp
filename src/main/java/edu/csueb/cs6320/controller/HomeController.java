@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.Auth;
+import edu.csueb.cs6320.utils.CartService;
 import edu.csueb.cs6320.utils.DBUtils;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.UserService;
@@ -32,7 +33,9 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userService;
-	
+	@Autowired
+	private CartService cartService;
+
 	//private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
@@ -67,6 +70,8 @@ public class HomeController {
 		if (user != null) {	// if we retrieved a user object, we are logged in
 			
 			request.getSession().setAttribute("user", user);
+			request.getSession().setAttribute("cart", 
+					cartService.getCartContents(user.getUserid()));
 			
 			// Decide which page we need to load:
 			return chooseRedirectBasedOnPrivileges(user);

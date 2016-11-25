@@ -26,6 +26,18 @@
                         <li><a href="<c:url value="/#loginDiv"/>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     </c:when>
                     <c:otherwise>
+	                    <li class="dropdown">
+	                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+	                        	Cart(<span id="cartSize">${fn:length(sessionScope.cart)}</span>) <b class="caret"></b>
+	                        	</a>
+	                        <ul class="dropdown-menu">
+	                            <li>
+	                            <%@ include file="/resources/jsp/embedCart.jsp" %>
+	                            </li>
+	                            <li class="divider"></li>
+	                            <li><a href="#">Checkout</a></li>
+	                        </ul>
+	                    </li>
                         <li>
                         	<a href="<c:url value="/settings"/>"><span class="glyphicon glyphicon-user"></span> 
                         	<span class="email"><c:out value="${sessionScope.user.email}" /></span>

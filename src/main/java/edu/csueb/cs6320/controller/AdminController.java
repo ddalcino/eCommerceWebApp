@@ -35,7 +35,8 @@ public class AdminController {
 //		return User.makeUserFromStringParams("John", "Smith", "jsmith@gmail.com", "5", "ADMIN");
 //	}
 	
-	@RequestMapping(value="/admin/deleteUser/{userid}", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/admin/deleteUser/{userid}", method=RequestMethod.GET, 
+			produces="application/json")
 	public @ResponseBody boolean deleteUser(@PathVariable long userid, HttpServletRequest request) {
 		System.out.println("Ajax request to delete a user with userid="+ userid +" occurred");
 		User admin = (User) request.getSession().getAttribute("user");

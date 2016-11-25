@@ -100,6 +100,15 @@
 //                		} else {
 //                			alert("Tried but failed to delete user.");
 //                		}
+//                $("#action_button").click(function () {
+//                	$.get("/cs6320/admin/user", function(data, status){
+//                		alert("Data: " + data +
+//                				"\nData members: " + data.firstname + " " + data.lastname +
+//                				"\nStatus: " + status
+//                				);
+//                		$("#stuff").val(data.firstname);
+//                	})
+//                })
 -->
                 
     </head>

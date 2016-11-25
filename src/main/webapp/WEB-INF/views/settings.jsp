@@ -11,6 +11,10 @@
         <%@include file="/resources/jsp/header.jsp" %>
         
         <script type='text/javascript'>
+        	function stopAndHideMsgAnimations() {
+        		$("#statusMsg").stop().hide();
+        		$("#errorMsg").stop().hide();
+        	}
         	$(document).ready(function () {
         		$("#changeName").click(function () {
         			var fname = $('[name=firstname]').val();
@@ -22,14 +26,15 @@
             		    dataType: "json",
             		    data: {firstname: fname, lastname: lname},
             		    success: function(data, status){
+            		    	stopAndHideMsgAnimations();
             		    	if (status == "success" && data == true){
 	            		    	$("span.fname").text(fname);
 	            		    	$("span.lname").text(lname);
-	            		    	$("#statusMsg").stop().hide()
+	            		    	$("#statusMsg")
 	            		    		.text("Name changed successfully!")
 	            		    		.slideDown().delay(5000).slideUp();
             		    	} else {
-	            		    	$("#statusMsg").stop().hide()
+	            		    	$("#errorMsg")
 	            		    		.text("Failed to change name!")
 	            		    		.slideDown().delay(5000).slideUp();
             		    	}
@@ -47,13 +52,14 @@
 	            		    dataType: "json",
 	            		    data: {newEmail: email1},
 	            		    success: function(data, status){
+	            		    	stopAndHideMsgAnimations();
 	            		    	if (status == "success" && data == true){
 		            		    	$("span.email").text(email1);
-		            		    	$("#statusMsg").stop().hide()
+		            		    	$("#statusMsg")
 		            		    		.text("Email address changed successfully!")
 		            		    		.slideDown().delay(5000).slideUp();
 	            		    	} else {
-		            		    	$("#statusMsg").stop().hide()
+		            		    	$("#errorMsg")
 		            		    		.text("Failed to change email!")
 		            		    		.slideDown().delay(5000).slideUp();
 	            		    	}
@@ -61,7 +67,8 @@
             		    });
 
                     } else {
-        		    	$("#statusMsg").stop().hide()
+       		    	stopAndHideMsgAnimations();
+       		    	$("#errorMsg")
         		    		.text("Email addresses must have data and be equal!")
         		    		.slideDown().delay(5000).slideUp();
                     }
@@ -79,12 +86,13 @@
 	            		    dataType: "json",
 	            		    data: {oldPassword: oldPass, newPassword: newPass1},
 	            		    success: function(data, status){
+	            		    	stopAndHideMsgAnimations();
 	            		    	if (status == "success" && data == true){
-		            		    	$("#statusMsg").stop().hide()
+		            		    	$("#statusMsg")
 		            		    		.text("Password changed successfully!")
 		            		    		.slideDown().delay(5000).slideUp();
 	            		    	} else {
-		            		    	$("#statusMsg").stop().hide()
+		            		    	$("#errorMsg")
 		            		    		.text("Failed to change password!")
 		            		    		.slideDown().delay(5000).slideUp();
 	            		    	}
@@ -94,7 +102,8 @@
                     }
         		});
         		$("#terms_conditions").click(function () {
-    		    	$("#statusMsg").stop().hide()
+    		    	stopAndHideMsgAnimations();
+    		    	$("#statusMsg")
 		    			.text("Haha jk I don't know what they are!")
 		    			.slideDown().delay(5000).slideUp();
         		});
@@ -105,12 +114,13 @@
         				dataType: "json",
         				data: {setSeller: true},
             		    success: function(data, status){
+            		    	stopAndHideMsgAnimations();
 	        		    	if (status == "success" && data == true){
-	            		    	$("#statusMsg").stop().hide()
+	            		    	$("#statusMsg")
 	            		    		.text("Congrats, now you're a seller!")
 	            		    		.slideDown().delay(5000).slideUp();
 	        		    	} else {
-	            		    	$("#statusMsg").stop().hide()
+	            		    	$("#errorMsg")
 	            		    		.text("Failed to change role!")
 	            		    		.slideDown().delay(5000).slideUp();
 	        		    	}
@@ -286,6 +296,7 @@
                                 <div class="col-md-12" style="text-align: right">
                                     <button id="becomeSeller" class="btn btn-default">
                                         Become a super awesome seller!!!
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +309,15 @@
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
-                    <div class="alert alert-warning" id="statusMsg" hidden>
+                    <div class="alert alert-success" id="statusMsg" hidden="true">
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="alert alert-warning" id="errorMsg" hidden="true">
                     </div>
                 </div>
                 <div class="col-md-2"></div>

@@ -1,15 +1,20 @@
 package edu.csueb.cs6320.bean;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import static javax.persistence.CascadeType.ALL;
 
 import org.springframework.web.util.HtmlUtils;
 
@@ -53,6 +58,9 @@ public class User implements Serializable {
 	private String salt;
 	private String saltedHashedPassword;
 	
+//	@OneToMany(cascade=ALL, fetch = FetchType.LAZY, mappedBy="seller")
+//	//@JoinColumn(name="Seller_id") // join column is in table for SaleItemOffer
+//	private Collection<SaleItemOffer> itemsForSale;
 	
 	
 	/////////////////////////////////////////////////////////////////
@@ -212,13 +220,23 @@ public class User implements Serializable {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	public String getSalted_hashed_password() {
+	
+//	public Collection<SaleItemOffer> getItemsForSale() {
+//		return itemsForSale;
+//	}
+//
+//	public void setItemsForSale(Collection<SaleItemOffer> itemsForSale) {
+//		this.itemsForSale = itemsForSale;
+//	}
+
+	public String getSaltedHashedPassword() {
 		return saltedHashedPassword;
 	}
-	public void setSalted_hashed_password(String salted_hashed_password) {
-		this.saltedHashedPassword = salted_hashed_password;
+
+	public void setSaltedHashedPassword(String saltedHashedPassword) {
+		this.saltedHashedPassword = saltedHashedPassword;
 	}
-	
+
 	public boolean isValid() {
 		return 	firstName != null && !firstName.equals("") &&
 				lastName != null && !lastName.equals("") &&
