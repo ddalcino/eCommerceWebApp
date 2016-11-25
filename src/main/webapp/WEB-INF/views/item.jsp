@@ -24,13 +24,13 @@
             			var table = $("#embedCartTable")
             			table.append('<tr><td>' +data.saleItem.title +
             					'</td><td class="seller">' + 
-            					data.seller.firstName + ' ' + data.seller.lastName + 
-         	   					'</td><td class="price">' + data.price + 
+            					data.offer.seller.firstName + ' ' + data.offer.seller.lastName + 
+         	   					'</td><td class="price">' + data.offer.price + 
          	   					'</td><td>' +
          	   					'<input type="number" name="quantity" min="0" max="' + 
-         	   					data.maxAvailable + '" value="' + data.quantity + '">' + 
+         	   					data.offer.quantityAvailable + '" value="' + data.quantity + '">' + 
          	   					'<input type="hidden" name="originalQty" value="' + data.quantity + '">'+
-        						'<input type="hidden" name="cartItemId" value="' + data.saleItem.id + '">' +
+        						'<input type="hidden" name="cartItemId" value="' + data.id + '">' +
         						'<button type="button" class="btn btn-default delete_cart_item">' +
                         			'Delete</button>' +
                             	'<button type="button" class="btn btn-default update_qty">' +
@@ -98,7 +98,7 @@
     	</div>
     	<div class="row">
     		<div class="col-md-12">
-    			<h3>Offers Available:</h3>
+    			<h3>${fn:length(offers)} Offers Available:</h3>
 	             <table class="table table-condensed">
 	                <thead>
 	                    <tr>

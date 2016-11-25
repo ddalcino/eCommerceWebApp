@@ -46,12 +46,13 @@ public class ItemController {
 		if (offers == null) {
 			System.out.println("Offers are null!");
 		} else {
+			System.out.println("Offers has " + offers.size() + " entries");
 			for(SaleItemOffer offer : offers) {
 				System.out.println(offer);
 			}
 		}
 		model.addAttribute("saleItem", item);
-		model.addAttribute("saleItemOffers", offers);
+		model.addAttribute("offers", offers);
 		return UrlNames.ITEM_JSP;
 	}
 

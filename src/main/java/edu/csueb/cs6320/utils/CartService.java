@@ -10,6 +10,7 @@ import javax.persistence.PersistenceUnit;
 
 import org.springframework.stereotype.Service;
 
+import edu.csueb.cs6320.bean.SaleItem;
 import edu.csueb.cs6320.bean.CartItem;
 import edu.csueb.cs6320.bean.SaleItemOffer;
 
@@ -36,10 +37,11 @@ public class CartService {
 		}
 		return items;
 	}
-	public CartItem addItemToCart(long buyerID, SaleItemOffer offer, int quantity) {
+	public CartItem addItemToCart(long buyerID, SaleItemOffer offer, int quantity, SaleItem saleItem) {
 		CartItem item = new CartItem();
 		item.setBuyerId(buyerID);
 		item.setOffer(offer);
+		item.setSaleItem(saleItem);
 		//item.setSaleItemOfferID(saleItemOfferID);
 		item.setQuantity(quantity);
 		

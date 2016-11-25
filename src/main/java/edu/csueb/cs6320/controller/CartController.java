@@ -22,6 +22,7 @@ import edu.csueb.cs6320.bean.User;
 import edu.csueb.cs6320.utils.CartService;
 import edu.csueb.cs6320.utils.UrlNames;
 import edu.csueb.cs6320.utils.SaleItemOfferService;
+import edu.csueb.cs6320.utils.SaleItemService;
 
 @Controller
 public class CartController {
@@ -30,6 +31,8 @@ public class CartController {
 	private CartService cartService;
 	@Autowired
 	private SaleItemOfferService saleItemOfferService;
+	@Autowired
+	private SaleItemService saleItemService;
 	
 	@RequestMapping(value="/cart/", method=RequestMethod.GET)
 	public String cart(
@@ -56,8 +59,10 @@ public class CartController {
 		User user = (User) request.getSession().getAttribute("user");
 		SaleItemOffer offer = saleItemOfferService.getOfferById(saleItemOfferID);
 		if (user != null && user.isUseridValid()) {
-			CartItem item = cartService.addItemToCart(user.getUserid(), 
-					offer, quantity);
+			CartItem item = cartService.addItemToCart(
+					user.getUserid(), 
+					offer, quantity, 
+					saleItemService.getSaleItemWithId(offer.getSaleItemId()));
 			List<CartItem> cart = (List<CartItem>) request.getSession()
 					.getAttribute("cart");
 			cart.add(item);
@@ -82,6 +87,7 @@ public class CartController {
 			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
 		if (user != null && user.isUseridValid()) {
+			System.out.println("Trying to change qty of cartItem#"+ cartItemID + " to " + quantity);
 			if(cartService.changeQuantity(cartItemID, quantity)){
 				// find item in sessionscope cart and change its value accordingly
 				List<CartItem> cart = (List<CartItem>) request.getSession()
