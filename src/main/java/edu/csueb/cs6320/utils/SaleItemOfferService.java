@@ -9,6 +9,7 @@ import javax.persistence.PersistenceUnit;
 
 import org.springframework.stereotype.Service;
 
+import edu.csueb.cs6320.bean.SaleItem;
 import edu.csueb.cs6320.bean.SaleItemOffer;
 
 @Service
@@ -68,6 +69,16 @@ public class SaleItemOfferService {
 		em.close();
 
 		return item;
+	}
+
+	public boolean createSaleItemOffer(SaleItemOffer offer) {
+
+		EntityManager em = Persistence.createEntityManagerFactory("TestPU")
+				.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(offer);
+		em.getTransaction().commit();
+		return true;
 	}
 
 }

@@ -90,7 +90,9 @@
     <div class="container">
     	<div class="row">
     		<div class="col-md-4">
-    			<img src="${saleItem.imgPath}" alt="image representing item for sale"/>
+    			<img src="/cs6320/images/?filename=${saleItem.imgPath}" 
+    				alt="image representing a(n) ${saleItem.title}"
+    				class="img-responsive"/>
     		</div>
     		<div class="col-md-8">
     			<h2>${saleItem.title}</h2>

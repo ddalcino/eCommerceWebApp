@@ -165,7 +165,7 @@ public class HomeController {
 		} else if (user.hasAdminPrivileges()) {
 			return "redirect:/admin";
 		} else if (user.hasSellerPrivileges()) {
-			return "redirect:/sellerHome";
+			return "redirect:/sell";
 		} else {
 			return "redirect:/home";
 		}	
