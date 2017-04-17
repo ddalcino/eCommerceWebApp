@@ -6,6 +6,12 @@
         <%@ include file="/resources/jsp/header.jsp" %>
         <script>
         	$(document).ready(function() {
+        		<%-- TODO: the addItem function is messy! This should be calling the same 
+        			 code that is called when the cart is initially generated, not 
+        			 building new items in parallel. This implementation makes the cart 
+        			 difficult to maintain. This was a quick-and-dirty solution, and it 
+        			 happened because the cart is initially built in jsp, but additions
+        			 need to happen in javascript on the client side.  --%>
         		$("button.addItem").click(function () {
         			var row = $(this).parent().children();
         			var sellItemOfferId = row.eq(0).val();
@@ -23,13 +29,19 @@
             			// add a new row to the dropdown cart
             			var table = $("#embedCartTable")
             			table.append('<tr>' + 
-            					'<td> <a href="<c:url value="/item/"/>' + data.saleItem.id + '">' +
-            						data.saleItem.title +
-            					'</a></td><td class="seller">' + 
+                    			
+
+            					'<td> <figure> <a href="<c:url value="/item/"/>${item.offer.saleItem.id}">'+
+            					'<img src="/cs6320/images/?filename='+
+            							data.offer.saleItem.imgPath + '" alt="image representing a(n) ' +
+            							data.offer.saleItem.title + '" class="img-responsive"/> </a>' +
+            					'<figcaption> <a href="<c:url value="/item/"/>' + data.offer.saleItem.id + '">' +
+            						data.offer.saleItem.title +
+            					'</a></figure></figcaption></td><td class="seller">' + 
             					data.offer.seller.firstName + ' ' + data.offer.seller.lastName + 
          	   					'</td><td class="price">' + data.offer.price + 
          	   					'</td><td>' +
-         	   					'<input type="number" name="quantity" min="0" max="' + 
+         	   					'<input type="number" name="quantity" class="form-control bfh-number" min="0" max="' + 
          	   					data.offer.quantityAvailable + '" value="' + data.quantity + '">' + 
          	   					'<input type="hidden" name="originalQty" value="' + data.quantity + '">'+
         						'<input type="hidden" name="cartItemId" value="' + data.id + '">' +
@@ -112,6 +124,7 @@
 	                        <th>Price</th>
 	                        <th>Qty available</th>
 	                        <th>Add To Cart</th>
+	                        <th></th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -126,7 +139,8 @@
 	                            <td>${offer.quantityAvailable}</td>
 	                            <td>
 	                            	<input type="hidden" name="offerid" value="${offer.id}">
-	                            	<input type="number" name="quantity"
+	                            	<input type="number" class="form-control bfh-number"
+	                            		name="quantity" size="3"
  										min="1" max="${offer.quantityAvailable}"
  										value="1">
 	                            	<button type="button" class="btn btn-default addItem">

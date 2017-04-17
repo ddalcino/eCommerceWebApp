@@ -7,6 +7,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 //import javax.json;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +36,11 @@ public class CartController {
 	private SaleItemOfferService saleItemOfferService;
 	@Autowired
 	private SaleItemService saleItemService;
+
 	
+	private static final Logger logger = LoggerFactory
+			.getLogger(FileUploadController.class);
+
 	@RequestMapping(value="/cart/", method=RequestMethod.GET)
 	public String cart(
 			Locale locale, 
@@ -57,15 +63,16 @@ public class CartController {
 			@RequestParam(value = "saleItemOfferID") long saleItemOfferID, 
 			@RequestParam(value = "quantity") int quantity, 
 			HttpServletRequest request) {
-		System.out.println("User trying to buy saleItemOfferID=" + 
+		logger.debug("User trying to buy saleItemOfferID=" + 
 			saleItemOfferID + ", qty=" + quantity);
 		User user = (User) request.getSession().getAttribute("user");
 		SaleItemOffer offer = saleItemOfferService.getOfferById(saleItemOfferID);
 		if (user != null && user.isUseridValid()) {
 			CartItem item = cartService.addItemToCart(
 					user.getUserid(), 
-					offer, quantity, 
-					saleItemService.getSaleItemWithId(offer.getSaleItemId()));
+					offer, quantity);
+//					saleItemService.getSaleItemWithId(offer.getSaleItemId()));
+//					offer.getSaleItem());
 			List<CartItem> cart = (List<CartItem>) request.getSession()
 					.getAttribute("cart");
 			cart.add(item);

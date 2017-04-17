@@ -110,9 +110,18 @@
             <c:forEach var="item" items="${sessionScope.cart}">
                 <tr id="itemid_${item.id}">
                 	<td>
-                		<a href='<c:url value="/item/"/>${item.saleItem.id}'>
-                			${item.saleItem.title}
-               			</a>
+                		<figure>
+                			<a href="<c:url value="/item/"/>${item.offer.saleItem.id}">
+		                		<img src="/cs6320/images/?filename=${item.offer.saleItem.imgPath}" 
+				    				alt="image representing a(n) ${item.offer.saleItem.title}"
+				    				class="img-responsive"/>
+		    				</a>
+	                		<figcaption>
+		                		<a href='<c:url value="/item/"/>${item.offer.saleItem.id}'>
+		                			${item.offer.saleItem.title}
+		               			</a>
+	               			</figcaption>
+               			</figure>
                 	</td>
                     <td class="seller">
                     	${item.offer.seller.firstName} 
@@ -122,7 +131,7 @@
                     	${item.offer.price}
                    	</td>
                     <td>
-                    	<input type="number" name="quantity"
+                    	<input type="number" name="quantity" class="form-control bfh-number" 
 							min="0" max="${item.offer.quantityAvailable}"
 							value="${item.quantity}">
 						<input type="hidden" name="originalQty" value="${item.quantity}">

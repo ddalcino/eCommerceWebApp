@@ -14,6 +14,11 @@ import edu.csueb.cs6320.bean.SaleItemOffer;
 
 @Service
 public class SaleItemService {
+
+	// TODO: Fix configuration of persistence unit. The EntityManager SHOULD be instantiated once, when the CartService
+	// is instantiated; instead, it's instantiated every time a member method is called. This is embarrassing to me,
+	// but it's what out professor taught us, and I haven't had time or the need to fix it.
+	
 	@PersistenceUnit(unitName = "TestPU")
 	private EntityManagerFactory emf;
 

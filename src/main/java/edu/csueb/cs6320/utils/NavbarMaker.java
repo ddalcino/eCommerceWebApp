@@ -29,7 +29,7 @@ public class NavbarMaker {
     public static final NavbarItem ADMIN_NAV_ITEM = 
     		new NavbarItem(UrlNames.ROOT_URL+UrlNames.ADMIN_URL, "Admin Utils", false);
     public static final NavbarItem SELL_NAV_ITEM = 
-    		new NavbarItem(UrlNames.ROOT_URL+UrlNames.SELL_URL, "Sell New Item", false);
+    		new NavbarItem(UrlNames.ROOT_URL+UrlNames.SELL_URL, "Seller Home", false);
 
     public static NavbarItem[] getNavbarItems(
 //            boolean isUserLoggedIn, 

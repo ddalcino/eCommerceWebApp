@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import edu.csueb.cs6320.bean.SaleItem;
 import edu.csueb.cs6320.bean.SaleItemOffer;
@@ -68,8 +69,7 @@ public class FileUploadController {
 	 * Actually, right now it makes a new SellItem, with a SellItemOffer attached
 	 */
 	@RequestMapping(value = "/sell/newItem", method = RequestMethod.POST)
-	public @ResponseBody
-	String uploadFileHandler(
+	public String uploadFileHandler(
 			@RequestParam("title") String title,
 			@RequestParam("description") String description,
 			@RequestParam("price") String price,
@@ -89,6 +89,7 @@ public class FileUploadController {
 			filename = filename.substring(cutoffIndex);
 			System.out.println("After cutoff, file is called: " + filename);
 		}
+		filename = HtmlUtils.htmlEscape(filename);
 		Double dPrice;
 		int quantity;
 		try {
@@ -105,8 +106,8 @@ public class FileUploadController {
 			
 			//Create a new item
 			SaleItem item = new SaleItem();
-			item.setTitle(title);
-			item.setDescription(description);
+			item.setTitle(HtmlUtils.htmlEscape(title));
+			item.setDescription(HtmlUtils.htmlEscape(description));
 			item.setImgPath(filename);
 			saleItemService.createSaleItem(item);
 			
@@ -114,7 +115,8 @@ public class FileUploadController {
 			SaleItemOffer offer = new SaleItemOffer();
 			offer.setPrice(dPrice);
 			offer.setQuantityAvailable(quantity);
-			offer.setSaleItemId(item.getId());
+			offer.setSaleItem(item);
+//			offer.setSaleItemId(item.getId());
 			offer.setSeller(user);
 			saleItemOfferService.createSaleItemOffer(offer);
 		}
@@ -124,14 +126,12 @@ public class FileUploadController {
 			
 			try {
 				byte[] bytes = file.getBytes();
-
-//				// Creating the directory to store file
-//				String rootPath = System.getProperty("catalina.home");
-//				File dir = new File(rootPath + File.separator + "tmpFiles");
-//				if (!dir.exists())
-//					dir.mkdirs();
 				String imgPath = context.getInitParameter("upload.location");
 
+				// TODO: PATCH THIS MASSIVE SECURITY HOLE! No sanitization is being done on the image files, and no
+				// checks are being done to ensure that the file is even an image file and not a binary executable.
+				// This functionality remains in the code because it looks good to be able to upload images. NOT SAFE!
+				
 				// Create the file on server
 				File serverFile = new File(imgPath
 						+ File.separator + filename);
@@ -142,8 +142,8 @@ public class FileUploadController {
 
 				logger.info("Server File Location="
 						+ serverFile.getAbsolutePath());
+				return"redirect:/sell";
 
-				return "You successfully uploaded file=" + filename;
 			} catch (Exception e) {
 				return "You failed to upload " + filename + " => " + e.getMessage();
 			}

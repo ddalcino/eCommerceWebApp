@@ -36,9 +36,8 @@ public class CartItem implements Serializable {
 	@JoinColumn(name="SaleItemOffer_id")
 	private SaleItemOffer offer;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="SaleItem_id")
-	private SaleItem saleItem;
+	@Column(name="SaleItem_id")
+	private long saleItemId;
 
 //	@Column(name="SaleItemOffer_id", insertable = false, updatable = false)
 //	private long saleItemOfferID;
@@ -103,12 +102,20 @@ public class CartItem implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public SaleItem getSaleItem() {
-		return saleItem;
+//	public SaleItem getSaleItem() {
+//		return saleItem;
+//	}
+//
+//	public void setSaleItem(SaleItem saleItem) {
+//		this.saleItem = saleItem;
+//	}
+
+	public long getSaleItemId() {
+		return saleItemId;
 	}
 
-	public void setSaleItem(SaleItem saleItem) {
-		this.saleItem = saleItem;
+	public void setSaleItemId(long saleItemId) {
+		this.saleItemId = saleItemId;
 	}
 
 	public java.util.Calendar getTimestampField() {

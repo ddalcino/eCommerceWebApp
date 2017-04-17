@@ -44,7 +44,8 @@ public class ItemController {
 		
 		SaleItem item = saleItemService.getSaleItemWithId(itemid);
 		Collection<SaleItemOffer> offers = 
-				saleItemOfferService.getOffersBySaleItemId(itemid);
+				saleItemOfferService.getOffersBySaleItem(item);
+//				saleItemOfferService.getOffersBySaleItemId(itemid);
 				//item.getOffersForItem();
 		if (offers == null) {
 			System.out.println("Offers are null!");

@@ -22,8 +22,16 @@ public class SaleItemOffer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(name="saleItem_id")
-	private long saleItemId;
+	
+	// this should be an actual saleitem
+//	@Column(name="saleItem_id")
+//	private long saleItemId;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="SaleItem_id")
+	private SaleItem saleItem;
+
+	
 	private double price;
 	@Column(name="qtyAvailable")
 	private int quantityAvailable;
@@ -50,12 +58,13 @@ public class SaleItemOffer implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public long getSaleItemId() {
-		return saleItemId;
-	}
-	public void setSaleItemId(long saleItemId) {
-		this.saleItemId = saleItemId;
-	}
+//	public long getSaleItemId() {
+//		return saleItemId;
+//	}
+//	public void setSaleItemId(long saleItemId) {
+//		this.saleItemId = saleItemId;
+//	}
+	
 //	public long getSellerId() {
 //		return sellerId;
 //	}
@@ -81,12 +90,12 @@ public class SaleItemOffer implements Serializable {
 	public void setQuantityAvailable(int quantityAvailable) {
 		this.quantityAvailable = quantityAvailable;
 	}
-//	public SaleItem getSaleItem() {
-//		return saleItem;
-//	}
-//	public void setSaleItem(SaleItem saleItem) {
-//		this.saleItem = saleItem;
-//	}
+	public SaleItem getSaleItem() {
+		return saleItem;
+	}
+	public void setSaleItem(SaleItem saleItem) {
+		this.saleItem = saleItem;
+	}
 
 
 }
